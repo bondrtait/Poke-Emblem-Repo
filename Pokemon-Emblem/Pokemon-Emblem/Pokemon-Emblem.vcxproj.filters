@@ -27,7 +27,7 @@
     <ClInclude Include="Tile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LevelManager.h">
+    <ClInclude Include="BattleStageManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

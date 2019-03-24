@@ -5,16 +5,16 @@
 using namespace sf;
 using namespace std;
 
-class LevelManager
+class BattleStageManager
 {
 private:
-	Vector2i m_LevelSize;
+	Vector2i m_BattleStageSize;
 
 public:
 	const int TILE_SIZE = 32;
 	const int VERTS_IN_QUAD = 4;
 
-	Tile** nextLevel(VertexArray& rVaLevel);
+	Tile** generateBattleStage(VertexArray& rVaLevel);
 	
-	Vector2i getLevelSize();
+	Vector2i getBattleStageSize();
 };

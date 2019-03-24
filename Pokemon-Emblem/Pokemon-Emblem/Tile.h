@@ -6,6 +6,7 @@ private:
 	
 	//Marks if the tile is occupied by another unit
 	bool m_occupied;
+
 	//Marks if the tile is not walkable (tree, rock, fence)
 	bool m_walkable;
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "TextureHolder.h"
-#include "LevelManager.h"
+#include "BattleStageManager.h"
 
 using namespace sf;
 
@@ -12,7 +12,7 @@ private:
 	TextureHolder th;
 
 	// A class to manage all the levels
-	LevelManager m_LM;
+	BattleStageManager m_LM;
 
 	const int TILE_SIZE = 32;
 	const int VERTS_IN_QUAD = 4;
@@ -25,14 +25,14 @@ private:
 	
 	//View m_HudView;
 
-	// The vertex array for the BattleField tiles
+	// The vertex array for the BattleStage tiles
 	VertexArray m_VALevel;
 
-	// The 2d array with the map for the level
+	// The 2d array with the map for the BattleStage
 	// A pointer to a pointer
 	Tile** m_ArrayLevel = nullptr;
 
-	// Texture for the BattleField tiles
+	// Texture for the BattleStage tiles
 	Texture m_TextureTiles;
 	
 	// Private functions for internal use only
@@ -41,7 +41,7 @@ private:
 	void draw();
 
 	// Load a new level
-	void loadLevel();
+	void loadBattleStage();
 
 public:
 	// The Engine constructor
