@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "TextureHolder.h"
-#include <sstream>
 #include <fstream>
 #include "BattleStageManager.h"
 

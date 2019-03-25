@@ -165,8 +165,8 @@
   <ItemGroup>
     <ClCompile Include="Draw.cpp" />
     <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="LevelManager.cpp" />
-    <ClCompile Include="LoadLevel.cpp" />
+    <ClCompile Include="BattleStageManager.cpp" />
+    <ClCompile Include="LoadBattleStage.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
