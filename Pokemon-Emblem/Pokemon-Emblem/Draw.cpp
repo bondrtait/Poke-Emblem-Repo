@@ -16,7 +16,10 @@ void Engine::draw()
 	m_Window.setView(m_MainView);
 
 	// Draw the Level
-	m_Window.draw(m_VALevel, &m_TextureTiles);
+	m_Window.draw(m_BSM.getVA(), &m_TextureTiles);
+
+	//Draw selector
+	m_Window.draw(m_BSM.getSelectorShape());
 
 	// Draw the HUD
 	// Switch to m_HudView

@@ -1,17 +1,19 @@
 #include "pch.h"
-#include "Engine.h"
+#include "BattleStageManager.h"
 
-void Engine::loadBattleStage()
+void BattleStageManager::loadBattleStage()
 {
 	// Delete the previously allocated memory
-	for (int i = 0; i < m_LM.getBattleStageSize().y; ++i)
+	for (int i = 0; i < m_BattleStageSize.y; ++i)
 	{
-		delete[] m_ArrayLevel[i];
+		delete[] TileMap[i];
 	}
 
-	delete[] m_ArrayLevel;
+	delete[] TileMap;
 	
 	// Load the next 2d array with the map for the level
 	// And repopulate the vertex array as well
-	m_ArrayLevel = m_LM.generateBattleStage(m_VALevel);
+	TileMap = generateTileMap(m_VAStage);
+
+	m_selector.initialSet(&TileMap[20][20]);
 }

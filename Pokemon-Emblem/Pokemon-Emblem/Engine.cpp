@@ -27,18 +27,20 @@ Engine::Engine()
 void Engine::run()
 {
 	// Timing
-	//Clock clock;
-	
+	Clock clock;
+
+	m_BSM.loadBattleStage();
+
 	while (m_Window.isOpen())
 	{
-		//Time dt = clock.restart();
+		Time dt = clock.restart();
 		
 		// Make a decimal fraction from the delta time
-		//float dtAsSeconds = dt.asSeconds();
+		float dtAsSeconds = dt.asSeconds();
 		
 		// Call each part of the game loop in turn
 		//input();
-		update();
+		//update();
 		draw();
 	}
 }

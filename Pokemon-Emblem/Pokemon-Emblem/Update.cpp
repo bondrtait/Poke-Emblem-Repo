@@ -5,5 +5,5 @@ using namespace sf;
 
 void Engine::update()
 {
-	loadBattleStage();
+	m_BSM.loadBattleStage();
 }

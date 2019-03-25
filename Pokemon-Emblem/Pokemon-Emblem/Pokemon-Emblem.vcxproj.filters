@@ -30,6 +30,9 @@
     <ClInclude Include="BattleStageManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GridSelector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -57,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BattleStageManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GridSelector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

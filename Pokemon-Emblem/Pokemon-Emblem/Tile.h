@@ -1,5 +1,17 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
+
+using namespace sf;
+
+const int TILE_SIZE = 32;
+
+enum class TileType {
+	PLAIN_GROUND,
+	ROCK,
+	GRASS
+};
+
 class Tile
 {
 private:
@@ -10,15 +22,20 @@ private:
 	//Marks if the tile is not walkable (tree, rock, fence)
 	bool m_walkable;
 
-	//The tile type 0 - plain ground, 1 - rocks, 2 grass
-	int m_type; 
+	// Defines the Tile type - GRASS, PLAIN_GROUND etc.
+	TileType m_type; 
 
-public:
-	//Constructor
+	//Stores the position of the tile in the TileMap (row, column)
+	Vector2i m_indexPos;
+
+public:	
+	//Constructors
 	Tile();
 
 	//Set walkability
-	void setType(const int &type);
+	void setType(TileType type);
+	   
+	void setPos(int column, int row);
 
 	// Set m_occupied = true
 	void occupy();
@@ -26,5 +43,6 @@ public:
 	// Getters
 	bool isOccupied();
 	bool isWalkable();
-	int getType();
+	TileType getType();
+	Vector2i& getPos();
 };

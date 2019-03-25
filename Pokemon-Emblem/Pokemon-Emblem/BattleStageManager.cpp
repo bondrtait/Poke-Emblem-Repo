@@ -7,12 +7,12 @@
 using namespace sf;
 using namespace std;
 
-Tile** BattleStageManager::generateBattleStage(VertexArray& rVaLevel)
+Tile** BattleStageManager::generateTileMap(VertexArray& rVaLevel)
 {
 	m_BattleStageSize.x = 0;
 	m_BattleStageSize.y = 0;
 
-	// Load the appropriate level from a text file
+	// Load the appropriate Stage from a text file
 	string stageToLoad("levels/stage1.txt");
 
 	ifstream inputFile(stageToLoad);
@@ -31,7 +31,7 @@ Tile** BattleStageManager::generateBattleStage(VertexArray& rVaLevel)
 	inputFile.clear();
 	inputFile.seekg(0, ios::beg);
 
-	// Prepare the 2d array to hold the int values from the file
+	// Prepare the 2d array to hold the Tile values from the file
 	Tile** battleStageGrid = new Tile*[m_BattleStageSize.y];
 	for (int i = 0; i < m_BattleStageSize.y; ++i)
 	{
@@ -46,7 +46,8 @@ Tile** BattleStageManager::generateBattleStage(VertexArray& rVaLevel)
 	{
 		for (int x = 0; x < row.length(); x++) {
 			const char val = row[x];
-			battleStageGrid[y][x].setType(atoi(&val));
+			battleStageGrid[y][x].setType(static_cast<TileType>(atoi(&val)));
+			battleStageGrid[y][x].setPos(x, y);
 		}
 		y++;
 	}
@@ -72,7 +73,7 @@ Tile** BattleStageManager::generateBattleStage(VertexArray& rVaLevel)
 			rVaLevel[currentVertex + 3].position = Vector2f((x * TILE_SIZE), (y * TILE_SIZE) + TILE_SIZE);
 			
 			// Which tile from the sprite sheet should we use
-			int verticalOffset = battleStageGrid[y][x].getType() * TILE_SIZE;
+			int verticalOffset = static_cast<int>(battleStageGrid[y][x].getType()) * TILE_SIZE;
 			rVaLevel[currentVertex + 0].texCoords =	Vector2f(0, 0 + verticalOffset);
 			rVaLevel[currentVertex + 1].texCoords =	Vector2f(TILE_SIZE, 0 + verticalOffset);
 			rVaLevel[currentVertex + 2].texCoords =	Vector2f(TILE_SIZE, TILE_SIZE + verticalOffset);
@@ -86,3 +87,9 @@ Tile** BattleStageManager::generateBattleStage(VertexArray& rVaLevel)
 } // End of nextLevel function
 
 Vector2i BattleStageManager::getBattleStageSize() { return m_BattleStageSize; }
+
+VertexArray& BattleStageManager::getVA() { return m_VAStage; }
+
+Tile* BattleStageManager::getTile(int x, int y) { return &TileMap[y][x]; }
+
+RectangleShape& BattleStageManager::getSelectorShape() { return m_selector.getShape(); }
