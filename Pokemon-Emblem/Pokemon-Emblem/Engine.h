@@ -14,9 +14,6 @@ private:
 	// A class to manage all the Stages
 	BattleStageManager m_BSM;
 
-	const int TILE_SIZE = 32;
-	const int VERTS_IN_QUAD = 4;
-
 	// A regular RenderWindow
 	RenderWindow m_Window;
 	
@@ -29,11 +26,11 @@ private:
 	Texture m_TextureTiles;
 	
 	// Private functions for internal use only
-	//void input();
+	void input();
 	void update();
 	void draw();
 
-
+	void viewFollowSelector();
 
 public:
 	// The Engine constructor

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Engine.h"
+
 Engine::Engine()
 {
 	// Get the screen resolution and create an SFML window and View
@@ -10,7 +11,6 @@ Engine::Engine()
 
 	// Initialize the fullscreen view
 	m_MainView.setSize(resolution);
-	//m_HudView.reset(FloatRect(0, 0, resolution.x, resolution.y));
 
 	// Inititialize the split screen Views
 	//m_BackgroundTexture = TextureHolder::GetTexture("graphics/background.png");
@@ -22,25 +22,58 @@ Engine::Engine()
 	m_TextureTiles = TextureHolder::GetTexture("graphics/tileset.png");
 }
 
-
-
 void Engine::run()
 {
 	// Timing
-	Clock clock;
+	//Clock clock;
 
 	m_BSM.loadBattleStage();
+	m_MainView.setCenter(m_BSM.getGridSelector().getCenter());
 
 	while (m_Window.isOpen())
 	{
-		Time dt = clock.restart();
+		//Time dt = clock.restart();
 		
 		// Make a decimal fraction from the delta time
-		float dtAsSeconds = dt.asSeconds();
+		//float dtAsSeconds = dt.asSeconds();
 		
 		// Call each part of the game loop in turn
-		//input();
-		//update();
+		input();
+		update();
 		draw();
 	}
+}
+
+
+void Engine::viewFollowSelector()
+{
+	Vector2f viewSize(m_MainView.getSize());
+	Vector2f viewCenter(m_MainView.getCenter());
+	
+	//Construct a FloatRect that represents the mainView
+	FloatRect viewRect(viewCenter.x - (viewSize.x / 2), viewCenter.y - (viewSize.y / 2), viewSize.x, viewSize.y);
+
+	FloatRect selectorRect = m_BSM.getGridSelector().getSprite().getGlobalBounds();
+
+	//The variables that mark if selector vertex is out of the mainView boundaries
+	bool topLeftOut{ !viewRect.contains(selectorRect.left, selectorRect.top) };
+	bool topRightOut{ !viewRect.contains(selectorRect.left + selectorRect.width, selectorRect.top) };
+	bool bottomLeftOut{ !viewRect.contains(selectorRect.left, selectorRect.top + selectorRect.height) };
+	bool bottomRightOut{ !viewRect.contains(selectorRect.left + selectorRect.width, selectorRect.top + selectorRect.height) };
+
+	//Selector moving up
+	if (topLeftOut && topRightOut)
+		m_MainView.move(0, -TILE_SIZE);
+
+	//Selector moving down
+	if (bottomLeftOut && bottomRightOut)
+		m_MainView.move(0, TILE_SIZE);
+
+	//Selector moving left
+	if (topLeftOut && bottomLeftOut)
+		m_MainView.move(-TILE_SIZE, 0);
+
+	//Selector moving right
+	if (topRightOut && bottomRightOut)
+		m_MainView.move(TILE_SIZE, 0);
 }

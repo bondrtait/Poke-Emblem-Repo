@@ -90,6 +90,16 @@ Vector2i BattleStageManager::getBattleStageSize() { return m_BattleStageSize; }
 
 VertexArray& BattleStageManager::getVA() { return m_VAStage; }
 
-Tile* BattleStageManager::getTile(int x, int y) { return &TileMap[y][x]; }
+Tile* BattleStageManager::getTile(int x, int y) { return &m_tileMap[y][x]; }
 
-RectangleShape& BattleStageManager::getSelectorShape() { return m_selector.getShape(); }
+GridSelector& BattleStageManager::getGridSelector() { return m_selector; }
+
+void BattleStageManager::handleInput()
+{
+	m_selector.handleInput();
+}
+
+void BattleStageManager::update()
+{
+	m_selector.update();
+}

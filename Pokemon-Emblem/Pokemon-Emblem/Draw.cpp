@@ -4,7 +4,7 @@
 void Engine::draw()
 {
 	// Rub out the last frame
-	m_Window.clear(Color::White);
+	m_Window.clear(Color::Black);
 
 	// Switch to background view
 	//m_Window.setView(m_BGMainView);
@@ -19,7 +19,7 @@ void Engine::draw()
 	m_Window.draw(m_BSM.getVA(), &m_TextureTiles);
 
 	//Draw selector
-	m_Window.draw(m_BSM.getSelectorShape());
+	m_Window.draw(m_BSM.getGridSelector().getSprite());
 
 	// Draw the HUD
 	// Switch to m_HudView

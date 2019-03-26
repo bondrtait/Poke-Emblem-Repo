@@ -12,6 +12,7 @@ using namespace std;
 class BattleStageManager
 {
 private:
+	//The size of the battle stage represented in tiles
 	Vector2i m_BattleStageSize;
 
 	// The vertex array for the BattleStage tiles
@@ -21,13 +22,12 @@ private:
 
 	// The 2d array with the map for the BattleStage
 	// A pointer to a pointer
-	Tile** TileMap = nullptr;
+	Tile** m_tileMap = nullptr;
 
 	//Create a 2d array of pointers to the Tile objects from the txt file
 	Tile** generateTileMap(VertexArray& rVaLevel);
 
 public:
-	const int TILE_SIZE = 32;
 	const int VERTS_IN_QUAD = 4;
 	   	
 	Vector2i getBattleStageSize();
@@ -37,7 +37,12 @@ public:
 
 	VertexArray& getVA();
 
+	//Return a Tile with the specified indices
 	Tile* getTile(int x, int y);
 
-	RectangleShape& getSelectorShape();
+	GridSelector& getGridSelector();
+
+	void handleInput();
+
+	void update();
 };

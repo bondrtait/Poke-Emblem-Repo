@@ -5,5 +5,7 @@ using namespace sf;
 
 void Engine::update()
 {
-	m_BSM.loadBattleStage();
+	m_BSM.update();
+
+	viewFollowSelector();
 }
