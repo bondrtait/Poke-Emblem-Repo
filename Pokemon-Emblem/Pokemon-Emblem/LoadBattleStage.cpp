@@ -15,5 +15,5 @@ void BattleStageManager::loadBattleStage()
 	// And repopulate the vertex array as well
 	m_tileMap = generateTileMap(m_VAStage);
 
-	m_selector.spawn(Vector2i(20,20), m_BattleStageSize);
+	m_selector.spawn(GridLocation(20,20), m_BattleStageSize);
 }

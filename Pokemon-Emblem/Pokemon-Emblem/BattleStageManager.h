@@ -15,10 +15,11 @@ private:
 	//The size of the battle stage represented in tiles
 	Vector2i m_BattleStageSize;
 
+	// The selector to interact with the Pokemon and BattleStage
+	GridSelector m_selector;
+
 	// The vertex array for the BattleStage tiles
 	VertexArray m_VAStage;
-
-	GridSelector m_selector;
 
 	// The 2d array with the map for the BattleStage
 	// A pointer to a pointer
@@ -29,20 +30,20 @@ private:
 
 public:
 	const int VERTS_IN_QUAD = 4;
-	   	
-	Vector2i getBattleStageSize();
+	
+	//Think about constructor here ....?
 
+	// Functions to handle BSM's internal objects updating and input, these are just to be able to call from the Engine
+	void handleInput();
+	void update();
+	
 	//Loads a new BattleStage, deleting any previous
 	void loadBattleStage();
-
+	
+	//Getters
+	GridSelector& getGridSelector();
+	Vector2i getBattleStageSize();
 	VertexArray& getVA();
-
 	//Return a Tile with the specified indices
 	Tile* getTile(int x, int y);
-
-	GridSelector& getGridSelector();
-
-	void handleInput();
-
-	void update();
 };

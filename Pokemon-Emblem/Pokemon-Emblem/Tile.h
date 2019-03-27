@@ -6,6 +6,8 @@ using namespace sf;
 
 const int TILE_SIZE = 32;
 
+typedef Vector2i GridLocation;
+
 enum class TileType {
 	PLAIN_GROUND,
 	ROCK,
@@ -26,15 +28,16 @@ private:
 	TileType m_type; 
 
 	//Stores the position of the tile in the TileMap (row, column)
-	Vector2i m_indexPos;
+	GridLocation m_indexPos;
 
 public:	
 	//Constructors
 	Tile();
 
-	//Set walkability
+	//Set Type and Walkability
 	void setType(TileType type);
 	   
+	//Set Tile's position in the TileMap
 	void setPos(int column, int row);
 
 	// Set m_occupied = true
@@ -44,5 +47,5 @@ public:
 	bool isOccupied();
 	bool isWalkable();
 	TileType getType();
-	Vector2i& getPos();
+	GridLocation& getPos();
 };

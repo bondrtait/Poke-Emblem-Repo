@@ -35,4 +35,4 @@ bool Tile::isWalkable() { return m_walkable; }
 
 TileType Tile::getType() { return m_type; }
 
-Vector2i& Tile::getPos() { return m_indexPos; }
+GridLocation& Tile::getPos() { return m_indexPos; }
