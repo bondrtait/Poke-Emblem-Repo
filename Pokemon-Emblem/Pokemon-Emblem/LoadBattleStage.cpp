@@ -16,4 +16,6 @@ void BattleStageManager::loadBattleStage()
 	m_tileMap = generateTileMap(m_VAStage);
 
 	m_selector.spawn(GridLocation(20,20), m_BattleStageSize);
+
+	pikachu.spawn(GridLocation(15, 15));
 }

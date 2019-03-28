@@ -10,7 +10,7 @@ GridSelector::GridSelector()
 	m_shape.setOrigin(Vector2f(TILE_SIZE / 2, TILE_SIZE / 2));
 }
 
-void GridSelector::spawn(Vector2i pos, Vector2i stageSize)
+void GridSelector::spawn(GridLocation pos, Vector2i stageSize)
 {
 	m_indexPos = pos;
 	m_stageSize = stageSize;
@@ -27,7 +27,6 @@ Vector2f GridSelector::getCenter() { return m_position; }
 
 void GridSelector::handleInput()
 {
-
 	//Check if time since last switch is greater then the switch rate && if the direction key is pressed
 	if (Keyboard::isKeyPressed(Keyboard::Left) && m_switchClock.getElapsedTime().asMilliseconds() > m_switchRate)
 	{

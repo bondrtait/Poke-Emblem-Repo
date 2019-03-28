@@ -160,6 +160,7 @@
     <ClInclude Include="BattleStageManager.h" />
     <ClInclude Include="GridSelector.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Pokemon.h" />
     <ClInclude Include="TextureHolder.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>
@@ -177,6 +178,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pokemon.cpp" />
     <ClCompile Include="TextureHolder.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Update.cpp" />

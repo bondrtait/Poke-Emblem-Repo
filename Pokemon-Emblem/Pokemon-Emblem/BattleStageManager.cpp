@@ -90,9 +90,11 @@ Vector2i BattleStageManager::getBattleStageSize() { return m_BattleStageSize; }
 
 VertexArray& BattleStageManager::getVA() { return m_VAStage; }
 
-Tile* BattleStageManager::getTile(int x, int y) { return &m_tileMap[y][x]; }
+Tile* BattleStageManager::getTile(GridLocation loc) { return &m_tileMap[loc.y][loc.x]; }
 
 GridSelector& BattleStageManager::getGridSelector() { return m_selector; }
+
+Pokemon& BattleStageManager::getPokemon() { return pikachu; };
 
 void BattleStageManager::handleInput()
 {
@@ -103,3 +105,4 @@ void BattleStageManager::update()
 {
 	m_selector.update();
 }
+

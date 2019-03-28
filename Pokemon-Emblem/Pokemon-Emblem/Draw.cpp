@@ -21,6 +21,9 @@ void Engine::draw()
 	//Draw selector
 	m_Window.draw(m_BSM.getGridSelector().getSprite());
 
+	//Draw pikachu
+	m_Window.draw(m_BSM.getPokemon().getSprite());
+
 	// Draw the HUD
 	// Switch to m_HudView
 	//m_Window.setView(m_HudView);

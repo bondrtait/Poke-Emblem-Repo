@@ -41,7 +41,7 @@ public:
 	GridSelector();
 
 	//Spawn selector when the stage starts
-	void spawn(Vector2i pos, Vector2i stageSize);
+	void spawn(GridLocation pos, Vector2i stageSize);
 
 	RectangleShape& getSprite();
 
