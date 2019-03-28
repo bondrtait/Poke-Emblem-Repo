@@ -15,14 +15,8 @@ void Engine::draw()
 	// Switch to m_MainView
 	m_Window.setView(m_MainView);
 
-	// Draw the Level
-	m_Window.draw(m_BSM.getVA(), &m_TextureTiles);
-
-	//Draw selector
-	m_Window.draw(m_BSM.getGridSelector().getSprite());
-
-	//Draw pikachu
-	m_Window.draw(m_BSM.getPokemon().getSprite());
+	//Draw everything in BSM
+	m_BSM.draw(m_Window, m_TextureTiles);
 
 	// Draw the HUD
 	// Switch to m_HudView

@@ -32,13 +32,13 @@ private:
 
 public:	
 	//Constructors
-	Tile();
+	Tile(TileType type, GridLocation loc);
 
-	//Set Type and Walkability
-	void setType(TileType type);
-	   
-	//Set Tile's position in the TileMap
-	void setPos(int column, int row);
+	////Set Type and Walkability
+	//void setType(TileType type);
+	//   
+	////Set Tile's position in the TileMap
+	//void setPos(int column, int row);
 
 	// Set m_occupied = true
 	void occupy();

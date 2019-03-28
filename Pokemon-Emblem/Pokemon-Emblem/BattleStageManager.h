@@ -2,6 +2,7 @@
 
 //#include <unordered_map>
 //#include <queue>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include "Tile.h"
 #include "GridSelector.h"
@@ -27,10 +28,10 @@ private:
 
 	// The 2d array with the Tiles for the BattleStage
 	// A pointer to a pointer
-	Tile** m_tileMap = nullptr;
+	vector<vector<Tile*> > m_tileMap;
 
 	//Create a 2d array of pointers to the Tile objects from the txt file
-	Tile** generateTileMap(VertexArray& rVaLevel);
+	vector<vector<Tile*> >& generateTileMap(VertexArray& rVaLevel);
 
 	//Pokemon instance temp
 	Pokemon pikachu;
@@ -55,7 +56,7 @@ public:
 	// Functions to handle BSM's internal objects updating and input, these are just to be able to call from the Engine
 	void handleInput();
 	void update();
-	//void draw(RenderWindow &target);
+	void draw(RenderWindow &target, Texture &tex);
 	
 	//Loads a new BattleStage, deleting any previous
 	void loadBattleStage();

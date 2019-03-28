@@ -7,7 +7,7 @@
 using namespace sf;
 using namespace std;
 
-Tile** BattleStageManager::generateTileMap(VertexArray& rVaLevel)
+vector<vector<Tile*> >& BattleStageManager::generateTileMap(VertexArray& rVaLevel)
 {
 	m_BattleStageSize.x = 0;
 	m_BattleStageSize.y = 0;
@@ -32,22 +32,26 @@ Tile** BattleStageManager::generateTileMap(VertexArray& rVaLevel)
 	inputFile.seekg(0, ios::beg);
 
 	// Prepare the 2d array to hold the Tile values from the file
-	Tile** battleStageGrid = new Tile*[m_BattleStageSize.y];
-	for (int i = 0; i < m_BattleStageSize.y; ++i)
-	{
-		// Add a new array into each array element
-		battleStageGrid[i] = new Tile[m_BattleStageSize.x];
-	}
+	//Tile** battleStageGrid = new Tile*[m_BattleStageSize.y];
+	//for (int i = 0; i < m_BattleStageSize.y; ++i)
+	//{
+	//	// Add a new array into each array element
+	//	battleStageGrid[i] = new Tile[m_BattleStageSize.x];
+	//}
+
+	vector<vector<Tile*> > battleStageGrid;
 
 	// Loop through the file and store all the values in the 2d array
 	string row;
 	int y = 0;
 	while (inputFile >> row)
 	{
+		battleStageGrid.push_back(vector<Tile*>());
 		for (int x = 0; x < row.length(); x++) {
 			const char val = row[x];
-			battleStageGrid[y][x].setType(static_cast<TileType>(atoi(&val)));
-			battleStageGrid[y][x].setPos(x, y);
+			battleStageGrid[y].push_back(new Tile(static_cast<TileType>(atoi(&val)), GridLocation(x, y)));
+			/*battleStageGrid[y][x].setType(static_cast<TileType>(atoi(&val)));
+			battleStageGrid[y][x].setPos(x, y);*/
 		}
 		y++;
 	}
@@ -73,7 +77,7 @@ Tile** BattleStageManager::generateTileMap(VertexArray& rVaLevel)
 			rVaLevel[currentVertex + 3].position = Vector2f((x * TILE_SIZE), (y * TILE_SIZE) + TILE_SIZE);
 			
 			// Which tile from the sprite sheet should we use
-			int verticalOffset = static_cast<int>(battleStageGrid[y][x].getType()) * TILE_SIZE;
+			int verticalOffset = static_cast<int>(battleStageGrid[y][x]->getType()) * TILE_SIZE;
 			rVaLevel[currentVertex + 0].texCoords =	Vector2f(0, 0 + verticalOffset);
 			rVaLevel[currentVertex + 1].texCoords =	Vector2f(TILE_SIZE, 0 + verticalOffset);
 			rVaLevel[currentVertex + 2].texCoords =	Vector2f(TILE_SIZE, TILE_SIZE + verticalOffset);
@@ -90,7 +94,7 @@ Vector2i BattleStageManager::getBattleStageSize() { return m_BattleStageSize; }
 
 VertexArray& BattleStageManager::getVA() { return m_VAStage; }
 
-Tile* BattleStageManager::getTile(GridLocation loc) { return &m_tileMap[loc.y][loc.x]; }
+Tile* BattleStageManager::getTile(GridLocation loc) { return m_tileMap[loc.y][loc.x]; }
 
 GridSelector& BattleStageManager::getGridSelector() { return m_selector; }
 
@@ -104,5 +108,18 @@ void BattleStageManager::handleInput()
 void BattleStageManager::update()
 {
 	m_selector.update();
+}
+
+
+void BattleStageManager::draw(RenderWindow &target, Texture &tex)
+{
+	// Draw the Level
+	target.draw(m_VAStage, &tex);
+
+	//Draw selector
+	target.draw(m_selector.getSprite());
+
+	//Draw pikachu
+	target.draw(pikachu.getSprite());
 }
 
