@@ -1,13 +1,77 @@
 #include "pch.h"
 
-#include "TextureHolder.h"
+#include <queue>
+#include <functional>
 #include <fstream>
+#include "TextureHolder.h"
 #include "BattleStageManager.h"
+
 
 using namespace sf;
 using namespace std;
 
-array<GridLocation, 4> BattleStageManager::DIRS = { GridLocation(1, 0), GridLocation(0, -1), GridLocation(-1, 0), GridLocation(0, 1) };
+//array<GridLocation, 4> BattleStageManager::DIRS = { GridLocation(1, 0), GridLocation(0, -1), GridLocation(-1, 0), GridLocation(0, 1) };
+
+vector<GridLocation> BattleStageManager::neighbors(GridLocation id)
+{
+	vector<GridLocation> results;
+
+	for (GridLocation dir : DIRS) {
+		GridLocation next( id.x + dir.x, id.y + dir.y );
+		if (in_bounds(next) && getTile(next)->isWalkable()) 
+			results.push_back(next);
+	}
+
+	if ((id.x + id.y) % 2 == 0) 
+		// aesthetic improvement on square grids
+		reverse(results.begin(), results.end());
+
+	return results;
+}
+
+bool BattleStageManager::in_bounds(GridLocation id) const
+{
+	return (0 <= id.x && id.x < m_BattleStageSize.x && 0 <= id.y && id.y < m_BattleStageSize.y);
+}
+
+void BattleStageManager::dijkstra_possible_range(GridLocation start, unordered_map<GridLocation, GridLocation>& came_from, 
+	unordered_map<GridLocation, int>& cost_so_far)
+{
+	//Construct a priority_queue that will store tiles and expand
+	priority_queue<PQElement, vector<PQElement>, greater<PQElement> > frontier;
+	//Put the starting location using std::pair constructor's arguments
+	frontier.emplace(0, start);
+
+	came_from[start] = start;
+	//This map Key holds GridLocation and the Value is the number of steps to get from start to that location
+	cost_so_far[start] = 0;
+
+	while (!frontier.empty())
+	{
+		//Get the easiest-to-get-to GridLocation and remove it from the frontier
+		GridLocation current = frontier.top().second;
+		frontier.pop();
+
+		if (cost_so_far[current] <= 6)
+		{
+			//results.push_back(current);
+			
+			auto currNeigh = neighbors(current);
+
+			for (GridLocation& next : currNeigh)
+			{	
+				int new_cost = cost_so_far[current] + 1;
+				
+				if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next])
+				{
+					cost_so_far[next] = new_cost;
+					came_from[next] = current;
+					frontier.emplace(new_cost, next);
+				}
+			}
+		}
+	}
+}
 
 vector<vector<Tile*> > BattleStageManager::generateTileMap(VertexArray& rVaLevel)
 {
