@@ -16,5 +16,9 @@ void BattleStageManager::loadBattleStage()
 
 	m_selector.spawn(GridLocation(20,20), m_BattleStageSize);
 
-	pikachu.spawn(GridLocation(15, 15));
+	//For testing
+	GridLocation loc(15, 15);
+	
+	pikachu.spawn(loc);
+	m_tileMap[loc.y][loc.x]->putPokemonHere(&pikachu);
 }

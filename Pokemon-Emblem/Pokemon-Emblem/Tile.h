@@ -1,4 +1,6 @@
 #pragma once
+#ifndef TILE_H
+#define TILE_H
 
 #include <SFML/Graphics.hpp>
 
@@ -7,6 +9,8 @@ using namespace sf;
 const int TILE_SIZE = 32;
 
 typedef Vector2i GridLocation;
+
+class Pokemon; //forward declaration
 
 enum class TileType {
 	PLAIN_GROUND,
@@ -18,8 +22,8 @@ class Tile
 {
 private:
 	
-	//Marks if the tile is occupied by another unit
-	bool m_occupied;
+	//Pointer to a pokemon in the Tile
+	Pokemon* m_occupier = nullptr;
 
 	//Marks if the tile is not walkable (tree, rock, fence)
 	bool m_walkable;
@@ -34,18 +38,13 @@ public:
 	//Constructors
 	Tile(TileType type, GridLocation loc);
 
-	////Set Type and Walkability
-	//void setType(TileType type);
-	//   
-	////Set Tile's position in the TileMap
-	//void setPos(int column, int row);
-
-	// Set m_occupied = true
-	void occupy();
+	void putPokemonHere(Pokemon* pokemon);
+	void freeTheTile();
 
 	// Getters
-	bool isOccupied();
+	Pokemon* isOccupied();
 	bool isWalkable();
 	TileType getType();
 	GridLocation& getPos();
 };
+#endif

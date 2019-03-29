@@ -7,7 +7,9 @@
 using namespace sf;
 using namespace std;
 
-vector<vector<Tile*> >& BattleStageManager::generateTileMap(VertexArray& rVaLevel)
+array<GridLocation, 4> BattleStageManager::DIRS = { GridLocation(1, 0), GridLocation(0, -1), GridLocation(-1, 0), GridLocation(0, 1) };
+
+vector<vector<Tile*> > BattleStageManager::generateTileMap(VertexArray& rVaLevel)
 {
 	m_BattleStageSize.x = 0;
 	m_BattleStageSize.y = 0;
@@ -31,14 +33,6 @@ vector<vector<Tile*> >& BattleStageManager::generateTileMap(VertexArray& rVaLeve
 	inputFile.clear();
 	inputFile.seekg(0, ios::beg);
 
-	// Prepare the 2d array to hold the Tile values from the file
-	//Tile** battleStageGrid = new Tile*[m_BattleStageSize.y];
-	//for (int i = 0; i < m_BattleStageSize.y; ++i)
-	//{
-	//	// Add a new array into each array element
-	//	battleStageGrid[i] = new Tile[m_BattleStageSize.x];
-	//}
-
 	vector<vector<Tile*> > battleStageGrid;
 
 	// Loop through the file and store all the values in the 2d array
@@ -50,8 +44,6 @@ vector<vector<Tile*> >& BattleStageManager::generateTileMap(VertexArray& rVaLeve
 		for (int x = 0; x < row.length(); x++) {
 			const char val = row[x];
 			battleStageGrid[y].push_back(new Tile(static_cast<TileType>(atoi(&val)), GridLocation(x, y)));
-			/*battleStageGrid[y][x].setType(static_cast<TileType>(atoi(&val)));
-			battleStageGrid[y][x].setPos(x, y);*/
 		}
 		y++;
 	}
@@ -103,11 +95,59 @@ Pokemon& BattleStageManager::getPokemon() { return pikachu; };
 void BattleStageManager::handleInput()
 {
 	m_selector.handleInput();
+
+	//Pointer to the tile which is highlighted by the GridSelector
+	auto pokePtr = m_tileMap[m_selector.getLocation().y][m_selector.getLocation().x];
+
+	if (m_selector.getState() == SelectorState::EXPLORING)
+	{
+		if (Keyboard::isKeyPressed(Keyboard::Return) && pokePtr->isOccupied())
+			m_enterPressed = true;
+		else
+			m_enterPressed = false;
+	}
+	else if (m_selector.getState() == SelectorState::SELECTING_TARGET)
+	{
+		if (Keyboard::isKeyPressed(Keyboard::Return) && pokePtr->isWalkable())
+			m_enterPressed = true;
+		else
+			m_enterPressed = false;
+	}
 }
 
-void BattleStageManager::update()
+void BattleStageManager::update(float elapsedTime)
 {
 	m_selector.update();
+
+	if (m_enterPressed && m_lastSelectionTime > 0.7f)
+	{
+		if (m_selector.getState() == SelectorState::EXPLORING)
+		{
+			//Get a pointer to the Pokemon that is on the same tile with the selector when Enter is pressed
+			m_selectedPokemon = m_tileMap[m_selector.getLocation().y][m_selector.getLocation().x]->isOccupied();
+			
+			m_selector.changeState(SelectorState::SELECTING_TARGET);
+			m_lastSelectionTime = 0.0f;
+		}
+		else if (m_selector.getState() == SelectorState::SELECTING_TARGET)
+		{
+			//Respawn the previously selected Pokemon on the new location
+			m_selectedPokemon->spawn(m_selector.getLocation());
+			
+			//Free the tile m_selectedPokemon previously occupied
+			getTile(m_selectedPokemon->getLocation())->freeTheTile();
+			//Put m_selected Pokemon to a new tile
+			getTile(m_selector.getLocation())->putPokemonHere(m_selectedPokemon);
+			
+			//The Pokemon is not selected anymore
+			m_selectedPokemon = nullptr;
+
+			m_selector.changeState(SelectorState::EXPLORING);
+			m_lastSelectionTime = 0.0f;
+		}
+	}
+	else
+		m_lastSelectionTime += elapsedTime;
 }
 
 

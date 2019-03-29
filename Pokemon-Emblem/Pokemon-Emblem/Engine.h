@@ -27,7 +27,7 @@ private:
 	
 	// Private functions for internal use only
 	void input();
-	void update();
+	void update(float elapsedTime);
 	void draw();
 
 	void viewFollowSelector();

@@ -3,9 +3,9 @@
 
 using namespace sf;
 
-void Engine::update()
+void Engine::update(float elapsedTime)
 {
-	m_BSM.update();
+	m_BSM.update(elapsedTime);
 
 	viewFollowSelector();
 }

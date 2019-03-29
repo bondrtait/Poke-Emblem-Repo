@@ -5,6 +5,12 @@
 
 using namespace sf;
 
+enum class SelectorState
+{
+	EXPLORING,
+	SELECTING_TARGET
+};
+
 class GridSelector
 {
 private:
@@ -12,14 +18,11 @@ private:
 	
 	RectangleShape m_shape;
 
-	// The particular Tile in m_tileMap currently highlighted by the Selector
-	//Tile* m_tileSelected { nullptr };
-
 	// The size of the battle stage in tiles
 	Vector2i m_stageSize;
 
 	// The pair of indices of the m_tileSelected in the m_tileMap
-	Vector2i m_indexPos;
+	GridLocation m_indexPos;
 
 	// Pixel position of the Selector
 	Vector2f m_position;
@@ -36,6 +39,8 @@ private:
 	bool m_upPressed { false };
 	bool m_downPressed { false };
 
+	SelectorState m_currentState = SelectorState::EXPLORING;
+
 public:
 	//Constructor
 	GridSelector();
@@ -43,12 +48,16 @@ public:
 	//Spawn selector when the stage starts
 	void spawn(GridLocation pos, Vector2i stageSize);
 
-	RectangleShape& getSprite();
 
+
+	RectangleShape& getSprite();
 	Vector2f getCenter();
+	GridLocation& getLocation();
+	SelectorState getState();
+
+	void changeState(SelectorState state);
 
 	void handleInput();
-
 	//Update selector position according to the input
 	void update();
 

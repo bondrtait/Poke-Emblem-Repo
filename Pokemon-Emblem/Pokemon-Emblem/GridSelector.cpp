@@ -25,6 +25,20 @@ RectangleShape& GridSelector::getSprite() { return m_shape; }
 
 Vector2f GridSelector::getCenter() { return m_position; }
 
+GridLocation& GridSelector::getLocation() { return m_indexPos; }
+
+SelectorState GridSelector::getState() { return m_currentState; }
+
+void GridSelector::changeState(SelectorState state) 
+{ 
+	m_currentState = state;
+
+	if (m_currentState == SelectorState::EXPLORING)
+		m_shape.setOutlineColor(Color::Red);
+	if (m_currentState == SelectorState::SELECTING_TARGET)
+		m_shape.setOutlineColor(Color::Blue);
+}
+
 void GridSelector::handleInput()
 {
 	//Check if time since last switch is greater then the switch rate && if the direction key is pressed
