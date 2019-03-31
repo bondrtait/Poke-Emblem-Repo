@@ -28,3 +28,26 @@ bool Tile::isWalkable() { return m_walkable; }
 TileType Tile::getType() { return m_type; }
 
 GridLocation& Tile::getPos() { return m_indexPos; }
+
+GridLocation::GridLocation() {}
+
+GridLocation::GridLocation(int x_coord, int y_coord) : x(x_coord), y(y_coord)
+{
+}
+
+bool operator==(const GridLocation & left, const GridLocation & right)
+{
+	return left.x == right.x && left.y == right.y;
+}
+
+bool operator!=(const GridLocation & left, const GridLocation & right)
+{
+	return !(left == right);
+}
+
+bool operator<(const GridLocation & left, const GridLocation & right)
+{
+	return left.y < right.y || (!(right.y < left.y) && left.x < right.x);
+}
+
+

@@ -8,7 +8,32 @@ using namespace sf;
 
 const int TILE_SIZE = 32;
 
-typedef Vector2i GridLocation;
+// A class to hold a 2d cordinates of a single Tile
+// I failed to use Vector2i T_T
+class GridLocation
+{
+public:
+	int x;
+	int y;
+
+	GridLocation();
+	GridLocation(int x_coord, int y_coord);
+
+	friend bool operator == (const GridLocation &left, const GridLocation &right);
+	friend bool operator != (const GridLocation &left, const GridLocation &right);
+	friend bool operator < (const GridLocation &left, const GridLocation &right);
+};
+
+namespace std {
+	/* implement hash function so we can put GridLocation into an unordered_map */
+	template <> struct hash<GridLocation> {
+		typedef GridLocation argument_type;
+		typedef size_t result_type;
+		size_t operator()(const GridLocation& id) const noexcept {
+			return std::hash<int>()(id.x ^ (id.y << 4));
+		}
+	};
+}
 
 class Pokemon; //forward declaration
 

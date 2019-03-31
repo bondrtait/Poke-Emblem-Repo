@@ -12,22 +12,11 @@
 using namespace sf;
 using namespace std;
 
-namespace std {
-	/* implement hash function so we can put GridLocation into an unordered_map */
-	template <> struct hash<GridLocation> {
-		typedef GridLocation argument_type;
-		typedef std::size_t result_type;
-		std::size_t operator()(const GridLocation& id) const noexcept {
-			return std::hash<int>()(id.x ^ (id.y << 4));
-		}
-	};
-}
+//Typedef for std::priority_queue element
+typedef std::pair<int, GridLocation> PQElement;
 
 //The array of posible directions (Up, Down, Left, Right)
 const array<GridLocation, 4> DIRS = { GridLocation(1, 0), GridLocation(0, -1), GridLocation(-1, 0), GridLocation(0, 1) };
-
-//Typedef for std::priority_queue element
-typedef std::pair<int, GridLocation> PQElement;
 
 //The class for managing BattleStages
 //It composes and stores a tilemap and vertex array for texture drawing
@@ -64,16 +53,18 @@ private:
 	//The time in seconds since last change of selector state
 	float m_lastSelectionTime = 0.0f;
 
-
-
 	// Check if the passed location is valid on the current tileMap
 	bool in_bounds(GridLocation id) const;
 
 	// Returns the adjacency list for the passed location
 	vector<GridLocation> neighbors(GridLocation id);
 
+	// Vector to hold Tiles which the selected Pokemon can reach
+	vector<GridLocation> m_possibleRange;
+
 	//Performs Dijkstra Search to get all the possible tiles within Pokemon movement range
-	void dijkstra_possible_range (GridLocation start, unordered_map<GridLocation, GridLocation>& came_from, 
+	vector<GridLocation> dijkstra_possible_range (GridLocation start, 
+		unordered_map<GridLocation, GridLocation>& came_from, 
 		unordered_map<GridLocation, int>& cost_so_far);
 
 public:

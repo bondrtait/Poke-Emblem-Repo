@@ -10,8 +10,6 @@
 using namespace sf;
 using namespace std;
 
-//array<GridLocation, 4> BattleStageManager::DIRS = { GridLocation(1, 0), GridLocation(0, -1), GridLocation(-1, 0), GridLocation(0, 1) };
-
 vector<GridLocation> BattleStageManager::neighbors(GridLocation id)
 {
 	vector<GridLocation> results;
@@ -34,7 +32,8 @@ bool BattleStageManager::in_bounds(GridLocation id) const
 	return (0 <= id.x && id.x < m_BattleStageSize.x && 0 <= id.y && id.y < m_BattleStageSize.y);
 }
 
-void BattleStageManager::dijkstra_possible_range(GridLocation start, unordered_map<GridLocation, GridLocation>& came_from, 
+vector<GridLocation> BattleStageManager::BattleStageManager::dijkstra_possible_range(GridLocation start,
+	unordered_map<GridLocation, GridLocation>& came_from, 
 	unordered_map<GridLocation, int>& cost_so_far)
 {
 	//Construct a priority_queue that will store tiles and expand
@@ -46,6 +45,8 @@ void BattleStageManager::dijkstra_possible_range(GridLocation start, unordered_m
 	//This map Key holds GridLocation and the Value is the number of steps to get from start to that location
 	cost_so_far[start] = 0;
 
+	vector<GridLocation> results;
+
 	while (!frontier.empty())
 	{
 		//Get the easiest-to-get-to GridLocation and remove it from the frontier
@@ -54,7 +55,7 @@ void BattleStageManager::dijkstra_possible_range(GridLocation start, unordered_m
 
 		if (cost_so_far[current] <= 6)
 		{
-			//results.push_back(current);
+			results.push_back(current);
 			
 			auto currNeigh = neighbors(current);
 
@@ -71,6 +72,8 @@ void BattleStageManager::dijkstra_possible_range(GridLocation start, unordered_m
 			}
 		}
 	}
+
+	return results;
 }
 
 vector<vector<Tile*> > BattleStageManager::generateTileMap(VertexArray& rVaLevel)
@@ -219,6 +222,8 @@ void BattleStageManager::draw(RenderWindow &target, Texture &tex)
 {
 	// Draw the Level
 	target.draw(m_VAStage, &tex);
+
+	//draw highlighted tiles
 
 	//Draw selector
 	target.draw(m_selector.getSprite());
