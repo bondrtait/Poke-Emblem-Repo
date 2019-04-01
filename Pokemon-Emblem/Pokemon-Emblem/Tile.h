@@ -3,10 +3,9 @@
 #define TILE_H
 
 #include <SFML/Graphics.hpp>
+#include "Util.h"
 
 using namespace sf;
-
-const int TILE_SIZE = 32;
 
 // A class to hold a 2d cordinates of a single Tile
 // I failed to use Vector2i T_T

@@ -59,12 +59,8 @@ private:
 	// Returns the adjacency list for the passed location
 	vector<GridLocation> neighbors(GridLocation id);
 
-	// Vector to hold Tiles which the selected Pokemon can reach
-	vector<GridLocation> m_possibleRange;
-
 	//Performs Dijkstra Search to get all the possible tiles within Pokemon movement range
 	vector<GridLocation> dijkstra_possible_range (GridLocation start, 
-		unordered_map<GridLocation, GridLocation>& came_from, 
 		unordered_map<GridLocation, int>& cost_so_far);
 
 public:

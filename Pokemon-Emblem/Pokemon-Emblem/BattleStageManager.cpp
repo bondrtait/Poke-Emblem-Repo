@@ -10,30 +10,29 @@
 using namespace sf;
 using namespace std;
 
+bool BattleStageManager::in_bounds(GridLocation id) const
+{
+	return (0 <= id.x && id.x < m_BattleStageSize.x && 0 <= id.y && id.y < m_BattleStageSize.y);
+}
+
 vector<GridLocation> BattleStageManager::neighbors(GridLocation id)
 {
 	vector<GridLocation> results;
 
 	for (GridLocation dir : DIRS) {
-		GridLocation next( id.x + dir.x, id.y + dir.y );
-		if (in_bounds(next) && getTile(next)->isWalkable()) 
+		GridLocation next(id.x + dir.x, id.y + dir.y);
+		if (in_bounds(next) && getTile(next)->isWalkable())
 			results.push_back(next);
 	}
 
-	if ((id.x + id.y) % 2 == 0) 
+	if ((id.x + id.y) % 2 == 0)
 		// aesthetic improvement on square grids
 		reverse(results.begin(), results.end());
 
 	return results;
 }
 
-bool BattleStageManager::in_bounds(GridLocation id) const
-{
-	return (0 <= id.x && id.x < m_BattleStageSize.x && 0 <= id.y && id.y < m_BattleStageSize.y);
-}
-
-vector<GridLocation> BattleStageManager::BattleStageManager::dijkstra_possible_range(GridLocation start,
-	unordered_map<GridLocation, GridLocation>& came_from, 
+vector<GridLocation> BattleStageManager::BattleStageManager::dijkstra_possible_range(GridLocation start, 
 	unordered_map<GridLocation, int>& cost_so_far)
 {
 	//Construct a priority_queue that will store tiles and expand
@@ -41,7 +40,6 @@ vector<GridLocation> BattleStageManager::BattleStageManager::dijkstra_possible_r
 	//Put the starting location using std::pair constructor's arguments
 	frontier.emplace(0, start);
 
-	came_from[start] = start;
 	//This map Key holds GridLocation and the Value is the number of steps to get from start to that location
 	cost_so_far[start] = 0;
 
@@ -66,7 +64,6 @@ vector<GridLocation> BattleStageManager::BattleStageManager::dijkstra_possible_r
 				if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next])
 				{
 					cost_so_far[next] = new_cost;
-					came_from[next] = current;
 					frontier.emplace(new_cost, next);
 				}
 			}
@@ -143,7 +140,7 @@ vector<vector<Tile*> > BattleStageManager::generateTileMap(VertexArray& rVaLevel
 			rVaLevel[currentVertex + 3].texCoords = Vector2f(0, TILE_SIZE + verticalOffset);
 			
 			// Position ready for the next four vertices
-			currentVertex = currentVertex + VERTS_IN_QUAD;
+			currentVertex += VERTS_IN_QUAD;
 		}
 	}
 	return battleStageGrid;
@@ -195,22 +192,29 @@ void BattleStageManager::update(float elapsedTime)
 			
 			m_selector.changeState(SelectorState::SELECTING_TARGET);
 			m_lastSelectionTime = 0.0f;
+
+			unordered_map<GridLocation, int> cost_so_far;
+			m_selectedPokemon->givePossibleRange(dijkstra_possible_range(m_selectedPokemon->getLocation(), cost_so_far), m_BattleStageSize);
 		}
 		else if (m_selector.getState() == SelectorState::SELECTING_TARGET)
 		{
-			//Respawn the previously selected Pokemon on the new location
-			m_selectedPokemon->spawn(m_selector.getLocation());
 			
-			//Free the tile m_selectedPokemon previously occupied
-			getTile(m_selectedPokemon->getLocation())->freeTheTile();
-			//Put m_selected Pokemon to a new tile
-			getTile(m_selector.getLocation())->putPokemonHere(m_selectedPokemon);
-			
-			//The Pokemon is not selected anymore
-			m_selectedPokemon = nullptr;
+			if (m_selectedPokemon->isReachable(m_selector.getLocation()))
+			{
+				//Respawn the previously selected Pokemon on the new location
+				m_selectedPokemon->spawn(m_selector.getLocation());
 
-			m_selector.changeState(SelectorState::EXPLORING);
-			m_lastSelectionTime = 0.0f;
+				//Free the tile m_selectedPokemon previously occupied
+				getTile(m_selectedPokemon->getLocation())->freeTheTile();
+				//Put m_selected Pokemon to a new tile
+				getTile(m_selector.getLocation())->putPokemonHere(m_selectedPokemon);
+
+				//The Pokemon is not selected anymore
+				m_selectedPokemon = nullptr;
+
+				m_selector.changeState(SelectorState::EXPLORING);
+				m_lastSelectionTime = 0.0f;
+			}
 		}
 	}
 	else
@@ -223,7 +227,9 @@ void BattleStageManager::draw(RenderWindow &target, Texture &tex)
 	// Draw the Level
 	target.draw(m_VAStage, &tex);
 
-	//draw highlighted tiles
+	//Draw selected Pokemon possible movement range
+	if (m_selector.getState() == SelectorState::SELECTING_TARGET)
+		m_selectedPokemon->drawPossibleRange(target);
 
 	//Draw selector
 	target.draw(m_selector.getSprite());

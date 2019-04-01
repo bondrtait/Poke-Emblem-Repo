@@ -163,6 +163,7 @@
     <ClInclude Include="Pokemon.h" />
     <ClInclude Include="TextureHolder.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Draw.cpp" />
