@@ -1,11 +1,15 @@
 #pragma once
 #ifndef POKEMON_H
 #define POKEMON_H
+
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include "TextureHolder.h"
-#include "Tile.h"
+#include "TileMap.h"
 
 using namespace sf;
+
+
 
 class Pokemon
 {
@@ -19,29 +23,39 @@ private:
 	//The array of vertices of the Tiles in the possible movement range
 	VertexArray m_VARange;
 
+	//Auxillary maps for dijkstra and A* algorithms
+	std::unordered_map<GridLocation, GridLocation> m_came_from;
+	std::unordered_map<GridLocation, int> m_cost_so_far;
+
+	//A pointer to a tileMap
+	TileMap* m_tileMapPtr{nullptr};
+
+	//Holds the best path to the current goal
+	vector<GridLocation> m_path;
+
+	int heuristic(GridLocation a, GridLocation b);
+
 public:
 	Pokemon();
+
+	Pokemon(TileMap* map);
 
 	const int MOVEMENT_LIMIT{ 6 };
 
 	//Spawns Pokemon on a specified Tile
 	void spawn (GridLocation loc);
 
-	//Provides values for the vector of Tiles within MovementLimit and 
-	//fills the VertexArray m_VARange for further drawing
-	void givePossibleRange(const vector<GridLocation> &range, Vector2i &stageSize);
-	
+	//Performs Dijkstra Search to get all the possible tiles within Pokemon movement range
+	void dijkstra_possible_range();
+
 	//Highights the possible movement range using vertex array m_VARange
 	void drawPossibleRange(RenderWindow &target);
 
-	bool isReachable(const GridLocation &loc)
-	{
-		for (auto &tile : m_possibleRange)
-			if (tile == loc)
-				return true;
+	//Performs A* search for the best path from pokemon location to the goal
+	void a_star_search(GridLocation goal);
 
-		return false;
-	}
+	//Return true if passed location is in Pokemon's movement range
+	bool isReachable(const GridLocation &loc);
 	
 	Sprite& getSprite();
 	GridLocation& getLocation();

@@ -7,6 +7,8 @@
 
 using namespace sf;
 
+
+
 // A class to hold a 2d cordinates of a single Tile
 // I failed to use Vector2i T_T
 class GridLocation
@@ -71,4 +73,8 @@ public:
 	TileType getType();
 	GridLocation& getPos();
 };
+
+//Typedef for std::priority_queue element
+typedef std::pair<int, GridLocation> PQElement;
+
 #endif
