@@ -23,6 +23,9 @@ public:
 	friend bool operator == (const GridLocation &left, const GridLocation &right);
 	friend bool operator != (const GridLocation &left, const GridLocation &right);
 	friend bool operator < (const GridLocation &left, const GridLocation &right);
+	friend GridLocation operator -(const GridLocation &left, const GridLocation &right);
+
+	Vector2f getCenter();
 };
 
 namespace std {

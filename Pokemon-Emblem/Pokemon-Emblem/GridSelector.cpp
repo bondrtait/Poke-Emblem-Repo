@@ -33,10 +33,19 @@ void GridSelector::changeState(SelectorState state)
 { 
 	m_currentState = state;
 
-	if (m_currentState == SelectorState::EXPLORING)
+	switch (m_currentState)
+	{
+	case SelectorState::EXPLORING:
 		m_shape.setOutlineColor(Color::Red);
-	if (m_currentState == SelectorState::SELECTING_TARGET)
+		break;
+	case SelectorState::SELECTING_TARGET:
 		m_shape.setOutlineColor(Color::Blue);
+		break;
+	case SelectorState::WAITING:
+		m_shape.setOutlineColor(Color::Yellow);
+		break;
+	}
+
 }
 
 void GridSelector::handleInput()

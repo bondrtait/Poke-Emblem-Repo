@@ -15,8 +15,11 @@ class Pokemon
 {
 private:
 	Sprite m_sprite;
+	//Location on the tilemap
 	GridLocation m_location;
-	
+	//Position in pixels on screen
+	Vector2f m_position;
+
 	// Vector to hold Tiles which the Pokemon can reach from its current location
 	vector<GridLocation> m_possibleRange;
 
@@ -33,7 +36,13 @@ private:
 	//Holds the best path to the current goal
 	vector<GridLocation> m_path;
 
+	int m_pathLength;
+
+	//Manhattan distance function
 	int heuristic(GridLocation a, GridLocation b);
+
+	// Move pokemon to an adjacent tile, return true if the pokemon has reached the goal tile center
+	bool moveTo(GridLocation &start, GridLocation &end, float elapsedTime, float speed);
 
 public:
 	Pokemon();
@@ -53,6 +62,10 @@ public:
 
 	//Performs A* search for the best path from pokemon location to the goal
 	void a_star_search(GridLocation goal);
+
+	//Move pokemon along the path calculated in the a_star_search
+	// return true if the pokemon has reached the destination
+	bool followPath(GridLocation &goal, float elapsedTime);
 
 	//Return true if passed location is in Pokemon's movement range
 	bool isReachable(const GridLocation &loc);

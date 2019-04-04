@@ -44,10 +44,23 @@ void BattleStageManager::handleInput()
 
 void BattleStageManager::update(float elapsedTime)
 {
-	m_selector.update();
+	if (m_selector.getState() == SelectorState::WAITING)
+	{
+		if (m_selectedPokemon->followPath(m_selector.getLocation(), elapsedTime))
+		{
+			//The Pokemon is not selected anymore
+			m_selectedPokemon = nullptr;
+
+			m_selector.changeState(SelectorState::EXPLORING);
+			m_lastSelectionTime = 0.0f;
+		}
+	}
+	else
+		m_selector.update();
 
 	if (m_enterPressed && m_lastSelectionTime > 0.7f)
 	{
+
 		if (m_selector.getState() == SelectorState::EXPLORING)
 		{
 			//Get a pointer to the Pokemon that is on the same tile with the selector when Enter is pressed
@@ -64,20 +77,15 @@ void BattleStageManager::update(float elapsedTime)
 			
 			if (m_selectedPokemon->isReachable(m_selector.getLocation()))
 			{
+				//Calculate the path to a chosen location
 				m_selectedPokemon->a_star_search(m_selector.getLocation());
 				
-				//Respawn the previously selected Pokemon on the new location
-				m_selectedPokemon->spawn(m_selector.getLocation());
-
 				//Free the tile m_selectedPokemon previously occupied
 				m_tileMap.getTile(m_selectedPokemon->getLocation())->freeTheTile();
 				//Put m_selected Pokemon to a new tile
 				m_tileMap.getTile(m_selector.getLocation())->putPokemonHere(m_selectedPokemon);
 
-				//The Pokemon is not selected anymore
-				m_selectedPokemon = nullptr;
-
-				m_selector.changeState(SelectorState::EXPLORING);
+				m_selector.changeState(SelectorState::WAITING);
 				m_lastSelectionTime = 0.0f;
 			}
 		}

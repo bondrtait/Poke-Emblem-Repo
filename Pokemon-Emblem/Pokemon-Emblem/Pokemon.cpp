@@ -8,24 +8,49 @@ int Pokemon::heuristic(GridLocation a, GridLocation b)
 	return abs(a.x - b.x) + abs(a.y - b.y);
 }
 
+bool Pokemon::moveTo(GridLocation &start, GridLocation &end, float elapsedTime, float speed)
+{
+	//Calculate the direction of movement
+	GridLocation direction = end - start; //problem here
+
+	m_position.x += direction.x * speed * elapsedTime;
+	m_position.y += direction.y * speed * elapsedTime;
+	
+	//m_sprite.setPosition(m_position);
+
+	// check if the sprite went further then the goal center
+	if (abs(start.getCenter().x - m_position.x) > TILE_SIZE || abs(start.getCenter().y - m_position.y) > TILE_SIZE) 
+	{
+		m_position = end.getCenter();
+		m_sprite.setPosition(m_position);
+		return true;
+	}
+	else
+	{
+		m_sprite.setPosition(m_position);
+		return false;
+	}
+}
+
 Pokemon::Pokemon()
 {
 	m_sprite = Sprite(TextureHolder::GetTexture("graphics/025.png"));
-	m_sprite.setOrigin(Vector2f(10.0f, 10.0f));
+	m_sprite.setOrigin(Vector2f(16.0f, 16.0f));
 }
 
 Pokemon::Pokemon(TileMap * map)
 {
 	m_sprite = Sprite(TextureHolder::GetTexture("graphics/025.png"));
-	m_sprite.setOrigin(Vector2f(10.0f, 10.0f));
+	m_sprite.setOrigin(Vector2f(16.0f, 16.0f));
 	m_tileMapPtr = map;
 }
 
 void Pokemon::spawn(GridLocation loc)
 {
 	m_location = loc;
+	m_position = loc.getCenter();
 
-	m_sprite.setPosition((m_location.x * TILE_SIZE) + (TILE_SIZE / 2), (m_location.y * TILE_SIZE) + (TILE_SIZE / 2));
+	m_sprite.setPosition(m_position);
 }
 
 void Pokemon::dijkstra_possible_range()
@@ -142,13 +167,36 @@ void Pokemon::a_star_search(GridLocation goal)
 	}
 
 	//Reconstruct the path
+
+	if (!m_path.empty())
+		m_path.clear();
+
 	GridLocation current = goal;
 	while (current != m_location) {
 		m_path.push_back(current);
 		current = m_came_from[current];
 	}
 	m_path.push_back(m_location); // optional
-	reverse(m_path.begin(), m_path.end());
+	//reverse(m_path.begin(), m_path.end());
+
+	m_pathLength = m_path.size();
+}
+
+bool Pokemon::followPath(GridLocation &goal, float elapsedTime)
+{
+	float speed = TILE_SIZE * m_pathLength;
+
+	if (m_path.size() == 1)
+	{
+		m_location = goal;
+		return true;
+	}
+	else if (moveTo(m_path.back(), m_path[m_path.size() - 2], elapsedTime, speed))
+	{
+		m_path.pop_back();
+	}
+		
+	return false;
 }
 
 bool Pokemon::isReachable(const GridLocation & loc)

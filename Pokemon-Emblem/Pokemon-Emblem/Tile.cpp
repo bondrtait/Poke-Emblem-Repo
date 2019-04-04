@@ -35,6 +35,11 @@ GridLocation::GridLocation(int x_coord, int y_coord) : x(x_coord), y(y_coord)
 {
 }
 
+Vector2f GridLocation::getCenter()
+{
+	return Vector2f((x * TILE_SIZE) + (TILE_SIZE / 2), (y * TILE_SIZE) + (TILE_SIZE / 2));
+}
+
 bool operator==(const GridLocation & left, const GridLocation & right)
 {
 	return left.x == right.x && left.y == right.y;
@@ -48,6 +53,11 @@ bool operator!=(const GridLocation & left, const GridLocation & right)
 bool operator<(const GridLocation & left, const GridLocation & right)
 {
 	return left.y < right.y || (!(right.y < left.y) && left.x < right.x);
+}
+
+GridLocation operator-(const GridLocation & left, const GridLocation & right)
+{
+	return GridLocation(left.x - right.x, left.y - right.y);
 }
 
 

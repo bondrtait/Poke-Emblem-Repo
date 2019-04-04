@@ -8,7 +8,8 @@ using namespace sf;
 enum class SelectorState
 {
 	EXPLORING,
-	SELECTING_TARGET
+	SELECTING_TARGET,
+	WAITING
 };
 
 class GridSelector
