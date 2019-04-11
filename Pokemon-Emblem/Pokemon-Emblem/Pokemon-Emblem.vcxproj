@@ -159,6 +159,7 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="BattleStageManager.h" />
     <ClInclude Include="GridSelector.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Pokemon.h" />
     <ClInclude Include="TextureHolder.h" />
@@ -185,6 +186,12 @@
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Update.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\stage1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\playerTeam.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

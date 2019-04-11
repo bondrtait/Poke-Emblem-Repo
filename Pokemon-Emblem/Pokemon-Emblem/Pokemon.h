@@ -4,21 +4,26 @@
 
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
+#include "json.hpp"
 #include "TextureHolder.h"
 #include "TileMap.h"
 
 using namespace sf;
-
-
+using namespace std;
+using json = nlohmann::json;
 
 class Pokemon
 {
 private:
 	Sprite m_sprite;
+
 	//Location on the tilemap
 	GridLocation m_location;
+
 	//Position in pixels on screen
 	Vector2f m_position;
+
+	string m_name;
 
 	// Vector to hold Tiles which the Pokemon can reach from its current location
 	vector<GridLocation> m_possibleRange;
@@ -44,10 +49,17 @@ private:
 	// Move pokemon to an adjacent tile, return true if the pokemon has reached the goal tile center
 	bool moveTo(GridLocation &start, GridLocation &end, float elapsedTime, float speed);
 
+	bool m_fainted{ false };
+	RectangleShape m_healthBar;
+	void updateHealthBar();
+
+	int m_health;
+	int m_attack;
+
 public:
 	Pokemon();
 
-	Pokemon(TileMap* map);
+	Pokemon(TileMap* map, const json::object_t &obj);
 
 	const int MOVEMENT_LIMIT{ 6 };
 
@@ -69,8 +81,9 @@ public:
 
 	//Return true if passed location is in Pokemon's movement range
 	bool isReachable(const GridLocation &loc);
-	
+
 	Sprite& getSprite();
 	GridLocation& getLocation();
+	RectangleShape& getHealthBar();
 };
 #endif

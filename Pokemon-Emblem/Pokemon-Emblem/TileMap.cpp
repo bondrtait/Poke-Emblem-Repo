@@ -8,7 +8,7 @@ void TileMap::generateTileMap()
 	m_mapSize.y = 0;
 
 	// Load the appropriate Stage from a text file
-	string stageToLoad("levels/stage1.txt");
+	string stageToLoad("data/stage1.txt");
 
 	ifstream inputFile(stageToLoad);
 	string s;
@@ -97,7 +97,7 @@ vector<GridLocation> TileMap::neighbors(GridLocation id)
 	return results;
 }
 
-Tile * TileMap::getTile(GridLocation loc) { return m_vTiles[loc.y][loc.x]; }
+Tile * TileMap::getTile(const GridLocation &loc) { return m_vTiles[loc.y][loc.x]; }
 
 Vector2i TileMap::getSize() { return m_mapSize; }
 

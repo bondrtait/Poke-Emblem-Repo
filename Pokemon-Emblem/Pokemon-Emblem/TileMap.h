@@ -35,5 +35,5 @@ public:
 	vector<GridLocation> neighbors(GridLocation id);
 
 	//Return a Tile of the specified location
-	Tile* getTile(GridLocation loc);
+	Tile* getTile(const GridLocation &loc);
 };

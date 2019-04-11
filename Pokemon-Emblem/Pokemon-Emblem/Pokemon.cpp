@@ -3,6 +3,45 @@
 #include "Pokemon.h"
 #include "Util.h"
 
+void Pokemon::updateHealthBar()
+{
+	m_healthBar.setPosition(Vector2f(m_position.x, m_position.y + (TILE_SIZE/2) - (m_healthBar.getSize().y/2)));
+}
+
+Pokemon::Pokemon()
+{
+	m_sprite = Sprite(TextureHolder::GetTexture("graphics/025.png"));
+	m_sprite.setOrigin(Vector2f(16.0f, 16.0f));
+}
+
+Pokemon::Pokemon(TileMap* map, const json::object_t &obj)
+{
+	m_name = obj.at("name").get<string>();
+	m_sprite = Sprite(TextureHolder::GetTexture(obj.at("texture").get<string>()));
+	m_location = GridLocation(obj.at("spawnPosition").at("x").get<int>(), obj.at("spawnPosition").at("y").get<int>());
+	m_attack = obj.at("stats").at("attack").get<int>();
+	m_health = obj.at("stats").at("health").get<int>();
+
+	m_sprite.setOrigin(Vector2f(16.0f, 16.0f));
+	m_tileMapPtr = map;
+
+	m_healthBar.setSize(Vector2f(TILE_SIZE - 2, 4));
+	m_healthBar.setFillColor(Color::Green);
+	m_healthBar.setOutlineColor(Color::Black);
+	m_healthBar.setOutlineThickness(1.0f);
+	m_healthBar.setOrigin(TILE_SIZE / 2, m_healthBar.getSize().y / 2);
+}
+
+void Pokemon::spawn(GridLocation loc)
+{
+	m_location = loc;
+	m_position = m_location.getCenter();
+
+	m_sprite.setPosition(m_position);
+
+	updateHealthBar();
+}
+
 int Pokemon::heuristic(GridLocation a, GridLocation b)
 {
 	return abs(a.x - b.x) + abs(a.y - b.y);
@@ -23,35 +62,17 @@ bool Pokemon::moveTo(GridLocation &start, GridLocation &end, float elapsedTime, 
 	{
 		m_position = end.getCenter();
 		m_sprite.setPosition(m_position);
+		updateHealthBar();
 		return true;
 	}
 	else
 	{
 		m_sprite.setPosition(m_position);
+		updateHealthBar();
 		return false;
 	}
 }
 
-Pokemon::Pokemon()
-{
-	m_sprite = Sprite(TextureHolder::GetTexture("graphics/025.png"));
-	m_sprite.setOrigin(Vector2f(16.0f, 16.0f));
-}
-
-Pokemon::Pokemon(TileMap * map)
-{
-	m_sprite = Sprite(TextureHolder::GetTexture("graphics/025.png"));
-	m_sprite.setOrigin(Vector2f(16.0f, 16.0f));
-	m_tileMapPtr = map;
-}
-
-void Pokemon::spawn(GridLocation loc)
-{
-	m_location = loc;
-	m_position = loc.getCenter();
-
-	m_sprite.setPosition(m_position);
-}
 
 void Pokemon::dijkstra_possible_range()
 {
@@ -111,6 +132,9 @@ void Pokemon::dijkstra_possible_range()
 		m_VARange[currentVertex + 3].position = Vector2f(m_possibleRange[i].x * TILE_SIZE, (m_possibleRange[i].y * TILE_SIZE) + TILE_SIZE);
 
 		Color hlColor(0, 0, 255, 124);
+
+		//if (m_tileMapPtr->getTile(m_possibleRange[i])->isOccupied())
+		//	hlColor = Color(255, 0, 0, 124);
 
 		m_VARange[currentVertex + 0].color = hlColor;
 		m_VARange[currentVertex + 1].color = hlColor;
@@ -211,4 +235,6 @@ bool Pokemon::isReachable(const GridLocation & loc)
 Sprite& Pokemon::getSprite() { return m_sprite; }
 
 GridLocation& Pokemon::getLocation() { return m_location; }
+
+RectangleShape & Pokemon::getHealthBar() { return m_healthBar; }
 

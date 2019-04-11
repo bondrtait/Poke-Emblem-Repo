@@ -5,10 +5,30 @@
 #include <fstream>
 #include "TextureHolder.h"
 #include "BattleStageManager.h"
+#include "json.hpp"
 
 
 using namespace sf;
 using namespace std;
+using json = nlohmann::json;
+
+void BattleStageManager::loadTeams(const string & filename)
+{
+	//load json file
+	fstream f(filename);
+	if (!f)
+		return;
+
+	//deserialize 
+	json j = json::parse(f);
+
+	
+	for (const auto &poke : j["playerTeam"])
+	{
+		if (poke.is_object())
+			m_playerTeam.push_back(new Pokemon(&m_tileMap, poke));
+	}
+}
 
 int BattleStageManager::heuristic(GridLocation a, GridLocation b)
 {
@@ -16,8 +36,6 @@ int BattleStageManager::heuristic(GridLocation a, GridLocation b)
 }
 
 GridSelector& BattleStageManager::getGridSelector() { return m_selector; }
-
-Pokemon& BattleStageManager::getPokemon() { return pikachu; };
 
 void BattleStageManager::handleInput()
 {
@@ -75,7 +93,7 @@ void BattleStageManager::update(float elapsedTime)
 		else if (m_selector.getState() == SelectorState::SELECTING_TARGET)
 		{
 			
-			if (m_selectedPokemon->isReachable(m_selector.getLocation()))
+			if (m_selectedPokemon->isReachable(m_selector.getLocation()) && !m_tileMap.getTile(m_selector.getLocation())->isOccupied())
 			{
 				//Calculate the path to a chosen location
 				m_selectedPokemon->a_star_search(m_selector.getLocation());
@@ -107,7 +125,10 @@ void BattleStageManager::draw(RenderWindow &target, Texture &tex)
 	//Draw selector
 	target.draw(m_selector.getSprite());
 
-	//Draw pikachu
-	target.draw(pikachu.getSprite());
+	for (Pokemon* poke : m_playerTeam)
+	{
+		target.draw(poke->getSprite());
+		target.draw(poke->getHealthBar());
+	}
 }
 

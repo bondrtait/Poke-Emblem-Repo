@@ -1,0 +1,28 @@
+{
+	"playerTeam": [
+		{
+			"name": "Pikachu",
+			"texture": "graphics/025.png",
+			"spawnPosition": {
+				"x": 15,
+				"y": 15
+			},
+			"stats": {
+				"attack": 20,
+				"health": 100
+			}
+		},
+		{
+			"name": "Bulbasaur",
+			"texture": "graphics/001.png",
+			"spawnPosition": {
+				"x": 20,
+				"y": 20
+			},
+			"stats": {
+				"attack": 15,
+				"health": 90
+			}
+		}
+	]
+}

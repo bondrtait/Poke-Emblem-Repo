@@ -8,16 +8,12 @@
 #include <vector>
 #include <utility>
 #include <SFML/Graphics.hpp>
-//#include "Tile.h"
 #include "GridSelector.h"
 #include "Pokemon.h"
 #include "TileMap.h"
 
 using namespace sf;
 using namespace std;
-
-//Typedef for std::priority_queue element
-//typedef std::pair<int, GridLocation> PQElement;
 
 //The class for managing BattleStages
 //It composes and stores a tilemap and vertex array for texture drawing
@@ -33,8 +29,14 @@ private:
 	// The selector to interact with the Pokemon and BattleStage
 	GridSelector m_selector;
 
-	//Pokemon instance temp
-	Pokemon pikachu = Pokemon(&m_tileMap);
+	//Player Team
+	vector<Pokemon*> m_playerTeam;
+
+	//Enemy Team
+	vector<Pokemon*> m_enemyTeam;
+
+	//Extract Pokemon data from json file and fill the team vectors
+	void loadTeams(const string &filename);
 
 	//Pointer to a Pokemon currently selected by the selector
 	Pokemon* m_selectedPokemon = nullptr;
@@ -63,7 +65,6 @@ public:
 	
 	//Getters
 	GridSelector& getGridSelector();
-	Pokemon& getPokemon();
 };
 
 #endif

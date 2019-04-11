@@ -16,9 +16,11 @@ void BattleStageManager::loadBattleStage()
 
 	m_selector.spawn(GridLocation(20,20), m_tileMap.getSize());
 
-	//For testing
-	GridLocation loc(15, 15);
+	loadTeams("data/playerTeam.json");
 	
-	pikachu.spawn(loc);
-	m_tileMap.getTile(loc)->putPokemonHere(&pikachu);
+	for (Pokemon* poke : m_playerTeam)
+	{
+		poke->spawn(poke->getLocation());
+		m_tileMap.getTile(poke->getLocation())->putPokemonHere(poke);
+	}
 }
